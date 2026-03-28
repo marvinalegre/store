@@ -23,14 +23,14 @@ const PRODUCTS = [
     name: "Tang Mango Powder 20g",
     price: 19.4,
     stock: 8,
-    imageName: "1.jpg",
+    image: `${import.meta.env.VITE_BASE_URL}/images/products/1.jpg`,
   },
   {
     id: 2,
     name: "Angel All Purpose Creamer 370ml",
     price: 55,
     stock: 0,
-    imageName: "2.jpeg",
+    image: `${import.meta.env.VITE_BASE_URL}/images/products/2.jpeg`,
   },
 ];
 
@@ -88,33 +88,40 @@ export default function ProductList() {
             {filtered.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col gap-2 shadow-sm hover:shadow-md transition"
+                className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-row gap-4 shadow-sm hover:shadow-md transition"
               >
-                <NavLink to={`/products?p=${product.id}`}>
-                  <span
-                    className={`text-xs font-semibold ${
-                      product.stock === 0
-                        ? "text-gray-400"
+                <NavLink
+                  to={`/products?p=${product.id}`}
+                  className="flex flex-row gap-4 w-full"
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-24 h-24 object-contain rounded-xl bg-slate-100 shrink-0"
+                  />
+                  <div className="flex flex-col justify-center gap-1">
+                    <span
+                      className={`text-xs font-semibold ${
+                        product.stock === 0
+                          ? "text-gray-400"
+                          : product.stock < 10
+                            ? "text-red-500"
+                            : "text-green-600"
+                      }`}
+                    >
+                      {product.stock === 0
+                        ? "✗ Out of stock"
                         : product.stock < 10
-                          ? "text-red-500"
-                          : "text-green-600"
-                    }`}
-                  >
-                    {product.stock === 0
-                      ? "✗ Out of stock"
-                      : product.stock < 10
-                        ? `⚠ ${product.stock} left`
-                        : "✓ In stock"}
-                  </span>
-                  <h3 className="text-sm font-semibold text-slate-800 leading-snug">
-                    {product.name}
-                  </h3>
-                  <p className="text-xl font-bold text-slate-900">
-                    Php{product.price.toFixed(2)}
-                  </p>
-                  {/*<button className="mt-2 w-full py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition cursor-pointer">
-                  Add to Cart
-                </button>*/}
+                          ? `⚠ ${product.stock} left`
+                          : "✓ In stock"}
+                    </span>
+                    <h3 className="text-sm font-semibold text-slate-800 leading-snug">
+                      {product.name}
+                    </h3>
+                    <p className="text-xl font-bold text-slate-900">
+                      Php{product.price.toFixed(2)}
+                    </p>
+                  </div>
                 </NavLink>
               </div>
             ))}
