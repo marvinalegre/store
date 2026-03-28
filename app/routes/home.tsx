@@ -2,9 +2,20 @@ import { NavLink } from "react-router";
 import type { Route } from "./+types/home";
 import { useState } from "react";
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: "Store" }];
-}
+export const meta = ({}: Route.MetaArgs) => [
+  { title: "Store" },
+  { property: "og:title", content: "Store" },
+  {
+    property: "og:description",
+    content: "Browse our full catalog of products.",
+  },
+  {
+    property: "og:image",
+    content: "https://store.marvinalegre.workers.dev/images/products/1.jpg",
+  },
+  { property: "og:url", content: "https://store.marvinalegre.workers.dev" },
+  { property: "og:type", content: "website" },
+];
 
 const PRODUCTS = [
   {
