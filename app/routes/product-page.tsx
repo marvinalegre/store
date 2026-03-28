@@ -53,11 +53,19 @@ export default function ProductPage() {
           <div>
             <h1 className="text-lg font-bold text-slate-900">{product.name}</h1>
             <p
-              className={`text-xs font-medium mt-1 ${product.stock < 10 ? "text-red-500" : "text-green-600"}`}
+              className={`text-xs font-medium mt-1 ${
+                product.stock === 0
+                  ? "text-gray-400"
+                  : product.stock < 10
+                    ? "text-red-500"
+                    : "text-green-600"
+              }`}
             >
-              {product.stock < 10
-                ? `⚠ Only ${product.stock} left`
-                : `✓ In stock`}
+              {product.stock === 0
+                ? "✗ Out of stock"
+                : product.stock < 10
+                  ? `⚠ ${product.stock} left`
+                  : "✓ In stock"}
             </p>
           </div>
 
