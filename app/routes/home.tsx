@@ -1,3 +1,4 @@
+import { NavLink } from "react-router";
 import type { Route } from "./+types/home";
 import { useState } from "react";
 
@@ -78,30 +79,32 @@ export default function ProductList() {
                 key={product.id}
                 className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col gap-2 shadow-sm hover:shadow-md transition"
               >
-                <span
-                  className={`text-xs font-semibold ${
-                    product.stock === 0
-                      ? "text-gray-400"
+                <NavLink to={`/products?p=${product.id}`}>
+                  <span
+                    className={`text-xs font-semibold ${
+                      product.stock === 0
+                        ? "text-gray-400"
+                        : product.stock < 10
+                          ? "text-red-500"
+                          : "text-green-600"
+                    }`}
+                  >
+                    {product.stock === 0
+                      ? "✗ Out of stock"
                       : product.stock < 10
-                        ? "text-red-500"
-                        : "text-green-600"
-                  }`}
-                >
-                  {product.stock === 0
-                    ? "✗ Out of stock"
-                    : product.stock < 10
-                      ? `⚠ ${product.stock} left`
-                      : "✓ In stock"}
-                </span>
-                <h3 className="text-sm font-semibold text-slate-800 leading-snug">
-                  {product.name}
-                </h3>
-                <p className="text-xl font-bold text-slate-900">
-                  Php{product.price.toFixed(2)}
-                </p>
-                {/*<button className="mt-2 w-full py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition cursor-pointer">
+                        ? `⚠ ${product.stock} left`
+                        : "✓ In stock"}
+                  </span>
+                  <h3 className="text-sm font-semibold text-slate-800 leading-snug">
+                    {product.name}
+                  </h3>
+                  <p className="text-xl font-bold text-slate-900">
+                    Php{product.price.toFixed(2)}
+                  </p>
+                  {/*<button className="mt-2 w-full py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition cursor-pointer">
                   Add to Cart
                 </button>*/}
+                </NavLink>
               </div>
             ))}
           </div>
