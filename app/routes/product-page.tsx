@@ -14,14 +14,14 @@ const PRODUCTS = [
     name: "Tang Mango Powder 20g",
     price: 19.4,
     stock: 8,
-    image: "http://localhost:5173/images/products/1.jpg",
+    image: `${import.meta.env.VITE_BASE_URL}/images/products/1.jpg`,
   },
   {
     id: 2,
     name: "Angel All Purpose Creamer 370ml",
     price: 55,
     stock: 0,
-    image: "http://localhost:5173/images/products/2.jpeg",
+    image: `${import.meta.env.VITE_BASE_URL}/images/products/2.jpeg`,
   },
 ];
 
