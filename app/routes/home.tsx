@@ -105,7 +105,7 @@ export default function ProductList() {
                         product.stock === 0
                           ? "text-gray-400"
                           : product.stock < 10
-                            ? "text-red-500"
+                            ? "text-orange-500"
                             : "text-green-600"
                       }`}
                     >

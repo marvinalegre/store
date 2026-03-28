@@ -64,7 +64,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
                 product.stock === 0
                   ? "text-gray-400"
                   : product.stock < 10
-                    ? "text-red-500"
+                    ? "text-orange-500"
                     : "text-green-600"
               }`}
             >
