@@ -33,7 +33,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <nav className="w-full bg-white border-b border-slate-200 shadow-sm p-4 md:px-6 flex items-center justify-between">
+          {/* Logo */}
+          <a
+            href="/"
+            className="text-xl font-bold text-slate-800 tracking-tight"
+          >
+            store<span className="text-amber-500">.website</span>
+          </a>
+        </nav>
         {children}
+        <footer className="w-full bg-white border-t border-slate-200 px-6 py-4 flex items-center justify-between text-sm text-slate-500">
+          <span>
+            Developed by{" "}
+            <a
+              href="https://github.com/marvinalegre"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-slate-700 hover:text-amber-500 transition"
+            >
+              marvinalegre
+            </a>
+          </span>
+        </footer>
+
         <ScrollRestoration />
         <Scripts />
       </body>
