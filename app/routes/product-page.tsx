@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router";
+import { redirect, useSearchParams } from "react-router";
 import type { Route } from "./+types/product-page";
 import { useState } from "react";
 
@@ -25,9 +25,16 @@ const PRODUCTS = [
   },
 ];
 
-export default function ProductPage() {
+export function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const product = findProduct(Number(url.searchParams.get("p")));
+  if (!product) return redirect("/");
+  return product;
+}
+
+export default function ProductPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, _setSearchParams] = useSearchParams();
-  const product = findProduct(Number(searchParams.get("p")));
+  const product = loaderData;
 
   const [added, setAdded] = useState(false);
 
