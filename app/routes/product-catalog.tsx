@@ -87,6 +87,13 @@ export default function ProductCatalog({ loaderData }: Route.ComponentProps) {
               Stock Up On These
             </h2>
             <ProductsGrid products={featuredProducts} />
+
+            <hr className="w-1/2 border-t border-gray-200 my-8 mx-auto" />
+
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+              Our Products
+            </h2>
+            <ProductsGrid products={products} />
           </>
         )}
 
@@ -108,7 +115,7 @@ export default function ProductCatalog({ loaderData }: Route.ComponentProps) {
 
 function ProductsGrid({ products }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
       {products.map((product) => (
         <div
           key={product.id}
