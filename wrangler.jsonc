@@ -16,6 +16,13 @@
 	"upload_source_maps": true,
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "store",
+			"database_id": "32f11b36-7378-4ee8-96f5-b73af8ca0e61"
+		}
 	]
 	/**
 	 * Smart Placement

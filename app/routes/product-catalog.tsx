@@ -17,27 +17,20 @@ export const meta = ({}: Route.MetaArgs) => [
   { property: "og:type", content: "website" },
 ];
 
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Tang Mango Powder 20g",
-    price: 19.4,
-    stock: 8,
-    image: `${import.meta.env.VITE_BASE_URL}/images/products/1.jpg`,
-  },
-  {
-    id: 2,
-    name: "Angel All Purpose Creamer 370ml",
-    price: 55,
-    stock: 0,
-    image: `${import.meta.env.VITE_BASE_URL}/images/products/2.jpeg`,
-  },
-];
+export async function loader({ context }: Route.LoaderArgs) {
+  return {
+    products: (
+      await context.cloudflare.env.DB.prepare("select * from products").all()
+    ).results,
+  };
+}
 
-export default function ProductCatalog() {
+export default function ProductCatalog({ loaderData }: Route.ComponentProps) {
+  const { products } = loaderData;
+  const featuredProducts = products.filter((p) => p.is_featured === 1);
   const [query, setQuery] = useState("");
 
-  const filtered = PRODUCTS.filter((p) =>
+  const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase()),
   );
 
@@ -48,7 +41,7 @@ export default function ProductCatalog() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900">Product Catalog</h1>
           <p className="text-sm text-slate-500 mt-1">
-            {PRODUCTS.length} items listed
+            {products.length} items listed
           </p>
         </div>
 
@@ -76,67 +69,30 @@ export default function ProductCatalog() {
           </div>
         </div>
 
-        {/* Results count */}
+        {/* Query result */}
         {query && (
-          <h2 className="text-2xl font-semibold text-slate-900 mb-4">
-            {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "
-            {query}"
-          </h2>
+          <>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+              {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "
+              {query}"
+            </h2>
+            <ProductsGrid products={filtered} />
+          </>
         )}
 
-        {/* Product Grid */}
+        {/* Featured Products */}
         {!query && (
-          <h2 className="text-2xl font-semibold text-slate-900 mb-4">
-            Stock Up On These
-          </h2>
+          <>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+              Stock Up On These
+            </h2>
+            <ProductsGrid products={featuredProducts} />
+          </>
         )}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-row gap-4 shadow-sm hover:shadow-md transition"
-              >
-                <NavLink
-                  to={`/products?p=${product.id}`}
-                  className="flex flex-row gap-4 w-full"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-24 h-24 object-contain rounded-xl bg-slate-100 shrink-0"
-                  />
-                  <div className="flex flex-col justify-center gap-1">
-                    <span
-                      className={`text-xs font-semibold ${
-                        product.stock === 0
-                          ? "text-gray-400"
-                          : product.stock < 10
-                            ? "text-orange-500"
-                            : "text-green-600"
-                      }`}
-                    >
-                      {product.stock === 0
-                        ? "✗ Out of stock"
-                        : product.stock < 10
-                          ? `⚠ ${product.stock} left`
-                          : "✓ In stock"}
-                    </span>
-                    <h3 className="text-sm font-semibold text-slate-800 leading-snug">
-                      {product.name}
-                    </h3>
-                    <p className="text-xl font-bold text-slate-900">
-                      Php{product.price.toFixed(2)}
-                    </p>
-                  </div>
-                </NavLink>
-              </div>
-            ))}
-          </div>
-        ) : (
+
+        {query && filtered.length === 0 && (
           <div className="text-center py-20 text-slate-400">
-            <p className="text-4xl mb-3">🔎</p>
-            <p className="text-base mb-4">No products match "{query}"</p>
+            <p className="text-4xl mb-6">🤷</p>
             <button
               onClick={() => setQuery("")}
               className="px-5 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 transition cursor-pointer"
@@ -146,6 +102,53 @@ export default function ProductCatalog() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ProductsGrid({ products }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {products.map((product) => (
+        <div
+          key={product.id}
+          className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-row gap-4 shadow-sm hover:shadow-md transition"
+        >
+          <NavLink
+            to={`/products?p=${product.id}`}
+            className="flex flex-row gap-4 w-full"
+          >
+            <img
+              src={`${import.meta.env.VITE_BASE_URL}/images/products/${product.image}`}
+              alt={product.name}
+              className="w-24 h-24 object-contain rounded-xl bg-slate-100 shrink-0"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <span
+                className={`text-xs font-semibold ${
+                  product.stock === 0
+                    ? "text-gray-400"
+                    : product.stock < 10
+                      ? "text-orange-500"
+                      : "text-green-600"
+                }`}
+              >
+                {product.stock === 0
+                  ? "✗ Out of stock"
+                  : product.stock < 10
+                    ? `⚠ ${product.stock} left`
+                    : "✓ In stock"}
+              </span>
+              <h3 className="text-sm font-semibold text-slate-800 leading-snug">
+                {product.name}
+              </h3>
+              <p className="text-xl font-bold text-slate-900">
+                ₱{product.price.toFixed(2)}
+              </p>
+            </div>
+          </NavLink>
+        </div>
+      ))}
     </div>
   );
 }
