@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/product-catalog";
 import { useState } from "react";
 
 export const meta = ({}: Route.MetaArgs) => [
@@ -34,7 +34,7 @@ const PRODUCTS = [
   },
 ];
 
-export default function ProductList() {
+export default function ProductCatalog() {
   const [query, setQuery] = useState("");
 
   const filtered = PRODUCTS.filter((p) =>
@@ -48,19 +48,19 @@ export default function ProductList() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900">Product Catalog</h1>
           <p className="text-sm text-slate-500 mt-1">
-            {PRODUCTS.length} items available
+            {PRODUCTS.length} items listed
           </p>
         </div>
 
         {/* Search */}
         <div className="flex justify-center">
-          <div className="relative mb-8 w-full max-w-md">
+          <div className="relative mb-8 w-full max-w-lg">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
               🔍
             </span>
             <input
               type="text"
-              placeholder="Search by product name…"
+              placeholder="Search..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full pl-9 pr-10 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition"
@@ -78,13 +78,18 @@ export default function ProductList() {
 
         {/* Results count */}
         {query && (
-          <p className="text-xs text-slate-500 mb-4">
+          <h2 className="text-2xl font-semibold text-slate-900 mb-4">
             {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "
             {query}"
-          </p>
+          </h2>
         )}
 
         {/* Product Grid */}
+        {!query && (
+          <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+            Stock Up On These
+          </h2>
+        )}
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((product) => (
