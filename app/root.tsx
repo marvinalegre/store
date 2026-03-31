@@ -79,7 +79,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
 function NavBar() {
   return (
-    <nav className="w-full bg-white border-b border-slate-200 shadow-sm p-4 md:px-6 flex items-center justify-between">
+    <nav className="w-full bg-white border-b border-slate-200 shadow-sm p-4 md:px-6 flex items-center justify-between sticky top-0 z-50">
       {/* Logo */}
       <a href="/" className="text-xl font-bold text-slate-800 tracking-tight">
         store<span className="text-amber-500">.website</span>
