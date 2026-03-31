@@ -6,30 +6,18 @@ export function meta({}: Route.MetaArgs) {
   return [{ title: "Store" }];
 }
 
-const findProduct = (id: number) =>
-  PRODUCTS.find((product) => product.id === id);
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Tang Mango Powder 20g",
-    price: 19.4,
-    stock: 8,
-    image: `${import.meta.env.VITE_BASE_URL}/images/products/1.jpg`,
-  },
-  {
-    id: 2,
-    name: "Angel All Purpose Creamer 370ml",
-    price: 55,
-    stock: 0,
-    image: `${import.meta.env.VITE_BASE_URL}/images/products/2.jpeg`,
-  },
-];
-
-export function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const product = findProduct(Number(url.searchParams.get("p")));
-  if (!product) return redirect("/");
-  return product;
+  if (!url.searchParams.get("p")) {
+    return redirect("/");
+  } else {
+    const product = await context.cloudflare.env.DB.prepare(
+      "select * from products where id = ?",
+    )
+      .bind(url.searchParams.get("p"))
+      .first();
+    return product;
+  }
 }
 
 export default function ProductPage({ loaderData }: Route.ComponentProps) {
@@ -49,7 +37,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         {/* Product Image */}
         <div className="aspect-square bg-slate-100 overflow-hidden">
           <img
-            src={product.image}
+            src={`${import.meta.env.VITE_BASE_URL}/images/products/${product.image}`}
             alt={product.name}
             className="w-full h-full object-cover"
           />
